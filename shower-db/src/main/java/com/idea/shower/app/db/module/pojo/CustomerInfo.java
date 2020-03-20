@@ -1,33 +1,48 @@
 package com.idea.shower.app.db.module.pojo;
 
-import com.idea.shower.db.mybaits.pojo.BaseDbDbEntity;
+import com.idea.shower.app.db.commons.pojo.BaseDbEntity;
+import java.io.Serializable;
+import java.util.Date;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-
-import java.io.Serializable;
+import lombok.NoArgsConstructor;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class CustomerInfo extends BaseDbDbEntity implements Serializable {
-    private static final long serialVersionUID = 1L;
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public class CustomerInfo extends BaseDbEntity implements Serializable {
     /**
-     * 用户昵称
-     */
-    private String nickName;
-    /**
-     * 用户OPENID
+     * openId
      */
     private String openId;
+
     /**
-     * 用户UNIONID
+     * unionId
      */
     private String unionId;
+
     /**
-     * 性别
+     * nickName
+     */
+    private String nickName;
+
+    /**
+     * gender
      */
     private Integer gender;
+
     /**
-     * 电话
+     * phoneNum
      */
-    private String phone;
+    private String phoneNum;
+
+    private static final long serialVersionUID = 1L;
+
+    public static CustomerInfoBuilder builder() {
+        return new CustomerInfoBuilder();
+    }
 }

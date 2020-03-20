@@ -113,24 +113,19 @@
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.idea.shower.app.db.module.pojo.AdminUser">
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.idea.shower.app.db.module.pojo.AdminUser" useGeneratedKeys="true">
     <!--@mbg.generated-->
-    insert into admin_user (id, create_time, update_time, 
-      create_user, update_user, username, 
-      `password`, `name`, enabled
-      )
-    values (#{id,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
-      #{createUser,jdbcType=VARCHAR}, #{updateUser,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR}, 
-      #{password,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{enabled,jdbcType=INTEGER}
-      )
+    insert into admin_user (create_time, update_time, create_user, 
+      update_user, username, `password`, 
+      `name`, enabled)
+    values (#{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=VARCHAR}, 
+      #{updateUser,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
+      #{name,jdbcType=VARCHAR}, #{enabled,jdbcType=INTEGER})
   </insert>
-  <insert id="insertSelective" parameterType="com.idea.shower.app.db.module.pojo.AdminUser">
+  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.idea.shower.app.db.module.pojo.AdminUser" useGeneratedKeys="true">
     <!--@mbg.generated-->
     insert into admin_user
     <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
-      </if>
       <if test="createTime != null">
         create_time,
       </if>
@@ -157,9 +152,6 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=BIGINT},
-      </if>
       <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},
       </if>
@@ -289,45 +281,52 @@
       enabled = #{enabled,jdbcType=INTEGER}
     where id = #{id,jdbcType=BIGINT}
   </update>
-    <select id="selectByCondtion" resultMap="BaseResultMap">
-        select
-        <include refid="Base_Column_List" />
-        from admin_user
-        <where>
-            <if test="id != null">
-                and id =#{id,jdbcType=BIGINT}
-            </if>
-            <if test="name != null and name != ''">
-                and (
-                username like concat('%',#{name,jdbcType=VARCHAR},'%')
-                or
-                real_name like concat('%',#{name,jdbcType=VARCHAR},'%')
-                )
-            </if>
-        </where>
-        <if test="order != null and order != ''">
-            order by ${order}
-            <if test="sort != null and sort != ''">
-                ${sort}
-            </if>
-        </if>
-    </select>
     <select id="selectByCondition" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List" />
         from admin_user
         <where>
-            <if test="id != null">
-                and id=#{id,jdbcType=BIGINT}
+            <if test="condition.id != null">
+                and id = #{condition.id,jdbcType=BIGINT}
             </if>
-            <if test="name != null and name != ''">
-                and lower(name) like lower(concat('%',#{name,jdbcType=VARCHAR},'%'))
+            <if test="condition.ids != null and condition.ids.size() != 0">
+                and id in
+                <foreach close=")" collection="condition.ids" index="index" item="item" open="(" separator=",">
+                    #{item,jdbcType=BIGINT}
+                </foreach>
+            </if>
+            <if test="condition.createUser != null and condition.createUser != ''">
+                and create_user like concat('%',#{condition.createUser,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="condition.updateUser != null and condition.updateUser != ''">
+                and update_user like concat('%',#{condition.updateUser,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="condition.createDateStart != null">
+                <![CDATA[and date(create_time) >= date(#{condition.updateDateStart,jdbcType=TIMESTAMP})]]>
+            </if>
+            <if test="condition.createDateEnd != null">
+                <![CDATA[and date(create_time) <= date(#{condition.createDateEnd,jdbcType=TIMESTAMP})]]>
+            </if>
+            <if test="condition.updateDateStart != null">
+                <![CDATA[and date(update_time) >= date(#{condition.updateDateStart})]]>
+            </if>
+            <if test="condition.updateDateEnd != null">
+                <![CDATA[and date(update_time) <= date(#{condition.updateDateEnd,jdbcType=TIMESTAMP})]]>
+            </if>
+            <if test="condition.username != null and condition.username != ''">
+                and username like concat('%',#{condition.username,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="condition.name != null and condition.name != ''">
+                and name like concat('%',#{condition.name,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="condition.enabled != null">
+                and enabled = #{condition.enabled,jdbcType=INTEGER}
             </if>
         </where>
-        <if test="order != null and order != ''">
-            order by ${order}
-            <if test="sort != null and sort != ''">
-                ${sort}
+        <if test="condition.order != null and condition.order != ''">
+            order by ${condition.order}
+            <if test="condition.sort != null and condition.sort != ''">
+                ${condition.sort}
             </if>
         </if>
     </select>
