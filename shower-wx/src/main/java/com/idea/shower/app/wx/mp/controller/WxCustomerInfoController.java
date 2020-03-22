@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @create: 2020-02-14 12:46
  */
 @RestController
-@RequestMapping("wx/customer")
+@RequestMapping("wx/customer/info")
 @AllArgsConstructor
 @Validated
 public class WxCustomerInfoController extends ResultController {
