@@ -1,7 +1,10 @@
 package com.idea.shower.app.db.module.dao.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.idea.shower.app.db.module.dao.DeviceInfoDao;
 import com.idea.shower.app.db.module.pojo.DeviceInfo;
+import com.idea.shower.app.db.module.pojo.DeviceInfoExample;
 import com.idea.shower.app.db.module.pojo.query.DeviceInfoQuery;
 import com.idea.shower.db.mybaits.pojo.PageResult;
 import com.idea.shower.app.db.commons.dao.impl.BaseDaoImpl;
@@ -10,7 +13,9 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -31,6 +36,25 @@ public class DeviceInfoDaoImpl extends BaseDaoImpl<DeviceInfo, DeviceInfoMapper>
     @Override
     public PageResult<DeviceInfo> selectPage(DeviceInfoQuery condition) {
         return pageResult(condition, baseMapper()::selectByCondition);
+    }
+
+    @Override
+    public PageResult<DeviceInfo> selectAll(DeviceInfoQuery deviceInfoQuery) {
+        DeviceInfoExample example = new DeviceInfoExample();
+        DeviceInfoExample.Criteria criteria =example.or();
+        if(!StringUtils.isEmpty(deviceInfoQuery.getAreaId())){
+            criteria.andAreaIdEqualTo(deviceInfoQuery.getAreaId());
+        }
+        if(!StringUtils.isEmpty(deviceInfoQuery.getCode())){
+            criteria.andCodeLike("%"+deviceInfoQuery.getCode().trim()+"%");
+        }
+        //启用状态标识2：全部；0：未启用；1：已启用
+        int allStatus = 2;
+        if(!StringUtils.isEmpty(deviceInfoQuery.getEnabled()) && deviceInfoQuery.getEnabled().intValue() != allStatus){
+            criteria.andEnabledEqualTo(deviceInfoQuery.getEnabled());
+        }
+        PageHelper.startPage(deviceInfoQuery.getPage(), deviceInfoQuery.getLimit());
+        return pageResult(PageInfo.of(baseMapper().selectByExample(example)));
     }
 
 }
