@@ -1,14 +1,14 @@
 package com.idea.shower.app.db.module.pojo;
 
 import com.idea.shower.app.db.commons.pojo.BaseDbEntity;
+import lombok.*;
+
 import java.io.Serializable;
 import java.util.Date;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 
+/**
+ * device_order
+ */
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Builder
@@ -44,6 +44,11 @@ public class DeviceOrder extends BaseDbEntity implements Serializable {
      * 订单号
      */
     private String orderNo;
+
+    /**
+     * 订单类型
+     */
+    private Integer orderType;
 
     /**
      * 客户ID

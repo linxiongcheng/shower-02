@@ -1,14 +1,13 @@
 package com.idea.shower.app.db.module.pojo;
 
 import com.idea.shower.app.db.commons.pojo.BaseDbEntity;
-import java.io.Serializable;
-import java.util.Date;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
+import java.io.Serializable;
+
+/**
+ * 区域信息
+ */
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Builder
@@ -26,4 +25,8 @@ public class AreaInfo extends BaseDbEntity implements Serializable {
     private String code;
 
     private static final long serialVersionUID = 1L;
+
+    public static AreaInfoBuilder builder() {
+        return new AreaInfoBuilder();
+    }
 }

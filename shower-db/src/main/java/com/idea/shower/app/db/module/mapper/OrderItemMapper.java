@@ -3,9 +3,10 @@ package com.idea.shower.app.db.module.mapper;
 import com.idea.shower.app.db.commons.mapper.BaseMapper;
 import com.idea.shower.app.db.module.pojo.OrderItem;
 import com.idea.shower.app.db.module.pojo.OrderItemExample;
-import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 @Mapper
 public interface OrderItemMapper extends BaseMapper {
@@ -33,7 +34,9 @@ public interface OrderItemMapper extends BaseMapper {
 
     OrderItem selectOneByOrderIdAndGoodsType(@Param("orderId") Long orderId, @Param("goodsType") Integer goodsType);
 
-    List<OrderItem> selectByOrderId(@Param("orderId") Long orderId);
+    List<OrderItem> selectByOrderId(@Param("orderId") String orderId);
 
     List<OrderItem> selectByOrderNo(@Param("orderNo") String orderNo);
+
+    OrderItem selectOneByOrderIdAndPriceType(@Param("orderId") Long orderId, @Param("priceType") Integer priceType);
 }
